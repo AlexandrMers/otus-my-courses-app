@@ -1,16 +1,26 @@
 import express from 'express';
+import { Connection, createConnection } from 'typeorm';
 
 const app = express();
 const port = 8080; // default port to listen
 
-// define a route handler for the default home page
-app.get('/', (req, res) => {
-  res.send('Hello world!');
-
-  const ogpdgopdfogpdfogpdfogpdfogpdfgopdfgodpfgopdfg = 10;
+// Connect to database
+const connection: Promise<Connection> = createConnection({
+  type: 'mongodb',
+  host: 'localhost',
+  port: 27020,
+  name: 'admin',
+  password: 'admin',
 });
 
-// start the Express server
+connection
+  .then(() => {
+    console.log('mongoDB is connected');
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
