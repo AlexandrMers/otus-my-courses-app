@@ -1,17 +1,14 @@
 import express from 'express';
 import { Connection, createConnection } from 'typeorm';
+import { MongoDbConfig } from './configs/mongoDb';
+
+import './configs/initializeDotenv';
 
 const app = express();
-const port = 8080; // default port to listen
 
 // Connect to database
-const connection: Promise<Connection> = createConnection({
-  type: 'mongodb',
-  host: 'localhost',
-  port: 27020,
-  name: 'admin',
-  password: 'admin',
-});
+
+const connection: Promise<Connection> = createConnection(MongoDbConfig);
 
 connection
   .then(() => {
@@ -20,6 +17,8 @@ connection
   .catch((error) => {
     console.log(error);
   });
+
+const port = process.env.APP_PORT;
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
