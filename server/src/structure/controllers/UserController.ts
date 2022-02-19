@@ -1,5 +1,8 @@
-import UserService from '../services/UserService';
-import { Response, Request } from 'express';
+import { Response } from 'express';
+
+import UserService from '../services/users/UserService';
+
+import { ExtendedRequest, UserInterface } from '../../types/Request';
 
 const TEXT_DUPLICATE_ERROR = 'duplicate key error collection';
 
@@ -10,21 +13,15 @@ class UserController {
     this.userService = userService;
   }
 
-  public register = async (req: Request, res: Response) => {
+  public register = async (req: ExtendedRequest<UserInterface>, res: Response) => {
     try {
+      const { name, password, confirmedPassword, login } = req.body;
+
       const user = await this.userService.register({
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        name: req.body.name,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        password: req.body.password,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        confirmedPassword: req.body.confirmedPassword,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        login: req.body.login,
+        name,
+        password,
+        confirmedPassword,
+        login,
       });
 
       res.json({

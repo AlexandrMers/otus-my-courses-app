@@ -1,16 +1,15 @@
 import { Router } from 'express';
 
 // Controllers
-import UserController from '../controllers/userController';
+import UserController from '../controllers/UserController';
 
 // Services
-import UserService from '../services/UserService';
-import { Connection } from 'typeorm';
+import UserService from '../services/users/UserService';
 
-const createUserRouter = (connection: Connection) => {
+const createUserRouter = () => {
   const userRouter = Router();
 
-  const userService = new UserService(connection);
+  const userService = new UserService();
   const userController = new UserController(userService);
 
   userRouter.post('/register', userController.register);

@@ -1,35 +1,29 @@
 import express from 'express';
-import { Connection, createConnection } from 'typeorm';
+import mongoose from 'mongoose';
 
 import createRoutes from './structure/routes';
 
 import './configs/initializeDotenv';
 
-import { Users } from './structure/models/UsersModel';
+import { getMongoDbUrl } from './configs/mongoDb';
 
-import { getMongoDbConfig } from './configs/mongoDb';
+const DEFAULT_PORT = 8080;
 
 const runServer = async () => {
-  const app = express();
+  try {
+    const app = express();
 
-  // Connect to database
-  const connection: Connection = await createConnection(getMongoDbConfig([Users]))
-    .then((connection) => {
-      console.log('MongoDB is connected');
-      return connection;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
+    // connect to database
+    const connection = await mongoose.connect(getMongoDbUrl(process));
+
+    createRoutes(app, connection);
+
+    const port = process.env.APP_PORT || DEFAULT_PORT;
+    app.listen(port, () => {
+      console.log(`server started at http://localhost:${port}`);
     });
-
-  createRoutes(app, connection);
-
-  const port = process.env.APP_PORT;
-
-  app.listen(port, () => {
-    console.log(`server started at http://localhost:${port}`);
-  });
+  } catch (error) {
+    throw Error(error);
+  }
 };
-
 runServer();
