@@ -9,14 +9,17 @@ interface CourseInterface {
   description: string;
 }
 
-class CoursesController {
+class CourseController {
   private coursesService: CoursesService;
 
   constructor(service: CoursesService) {
     this.coursesService = service;
   }
 
-  public create = async (req: ExtendedRequest<CourseInterface>, res: Response) => {
+  public create = async (
+    req: ExtendedRequest<CourseInterface>,
+    res: Response
+  ) => {
     try {
       const { name, description } = req.body;
 
@@ -36,8 +39,7 @@ class CoursesController {
 
   public getCourses = async (req: Request, res: Response) => {
     try {
-      console.log('run here');
-      const courses = await this.coursesService.getCourses();
+      const courses = await this.coursesService.getCourses(req.params.userId);
 
       res.json({
         status: 'ok',
@@ -52,4 +54,4 @@ class CoursesController {
   };
 }
 
-export default CoursesController;
+export default CourseController;

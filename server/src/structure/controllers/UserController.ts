@@ -1,8 +1,6 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import UserService from '../services/users/UserService';
-
-import { ExtendedRequest, UserInterface } from '../../types/Request';
 
 const TEXT_DUPLICATE_ERROR = 'duplicate key error collection';
 
@@ -13,7 +11,7 @@ class UserController {
     this.userService = userService;
   }
 
-  public register = async (req: ExtendedRequest<UserInterface>, res: Response) => {
+  public register = async (req: Request, res: Response) => {
     try {
       const { name, password, confirmedPassword, login } = req.body;
 
@@ -36,6 +34,22 @@ class UserController {
           message: 'пользователь с таким логином уже существует',
         });
       }
+      res.json({
+        status: 'error',
+        message: error.toString(),
+      });
+    }
+  };
+
+  public getById = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.getById(String(req.params.id));
+
+      res.json({
+        status: 'ok',
+        data: user,
+      });
+    } catch (error) {
       res.json({
         status: 'error',
         message: error.toString(),

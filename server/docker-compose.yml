@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   mongo:
-    image: mongo:3.7.1
+    image: mongo:latest
     container_name: mongo_3_3
     restart: always
     environment:
@@ -11,5 +11,5 @@ services:
       - 27020:27017
 
     volumes:
-      - ./mongo-data-3.7.1:/data/db
+      - ./mongo-data-4.4.4:/data/db
     command: --wiredTigerCacheSizeGB 1.5

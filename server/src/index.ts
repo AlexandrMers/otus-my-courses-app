@@ -14,15 +14,19 @@ const runServer = async () => {
     const app = express();
 
     // connect to database
-    const connection = await mongoose.connect(getMongoDbUrl(process));
+    await mongoose.connect(getMongoDbUrl(process)).then((connection) => {
+      console.log('MongoDB is connected');
+      return connection;
+    });
 
-    createRoutes(app, connection);
+    createRoutes(app);
 
     const port = process.env.APP_PORT || DEFAULT_PORT;
     app.listen(port, () => {
       console.log(`server started at http://localhost:${port}`);
     });
   } catch (error) {
+    console.error(error);
     throw Error(error);
   }
 };
